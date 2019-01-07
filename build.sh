@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # custom to your machine : Android NDK library location
-export ANDROID_NDK_ROOT=/Library/AndroidNDK
+export ANDROID_NDK_ROOT=~/Library/Android/sdk/ndk-bundle
 
 # the input folders for the C++ sources
 export NDK_PROJECT_PATH=./src/main/cpp
