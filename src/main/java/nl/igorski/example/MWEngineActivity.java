@@ -171,7 +171,7 @@ public final class MWEngineActivity extends Activity {
     protected void setupSong() {
         _sequencerController = _engine.getSequencerController();
         _sequencerController.setTempoNow( 130.0f, 4, 4 ); // 130 BPM in 4/4 time
-        _sequencerController.updateMeasures( 1, STEPS_PER_MEASURE ); // we'll loop just a single measure with given subdivisions
+        _sequencerController.updateMeasures( 10, STEPS_PER_MEASURE ); // we'll loop just a single measure with given subdivisions
 
         // cache some of the engines properties
 
@@ -179,8 +179,7 @@ public final class MWEngineActivity extends Activity {
 
         // Load some samples from the packaged assets folder into the SampleManager
 
-        loadWAVAsset( "hat.wav",  "hat" );
-        loadWAVAsset( "clap.wav", "clap" );
+        loadWAVAsset( "jazz.wav", "jazz" );
 
         // create a lowpass filter to catch all low rumbling and a limiter to prevent clipping of output :)
 
@@ -224,48 +223,7 @@ public final class MWEngineActivity extends Activity {
 
         // adjust synthesizer volumes
         _synth2.getAudioChannel().setVolume( .7f );
-
-        // STEP 2 : Sample events to play back a drum beat
-
-        createDrumEvent( "hat",  2 );  // hi-hat on the second 8th note after the first beat of the bar
-        createDrumEvent( "hat",  6 );  // hi-hat on the second 8th note after the second beat
-        createDrumEvent( "hat",  10 ); // hi-hat on the second 8th note after the third beat
-        createDrumEvent( "hat",  14 ); // hi-hat on the second 8th note after the fourth beat
-        createDrumEvent( "clap", 4 );  // clap sound on the second beat of the bar
-        createDrumEvent( "clap", 12 ); // clap sound on the third beat of the bar
-
-        // Real-time synthesis events
-
-        // bubbly sixteenth note bass line for synth 1
-
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  0 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  1 );
-        createSynthEvent( _synth1, Pitch.note( "C", 3 ),  2 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  3 );
-        createSynthEvent( _synth1, Pitch.note( "A#", 1 ), 4 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  5 );
-        createSynthEvent( _synth1, Pitch.note( "C", 3 ),  6 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  7 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  8 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  9 );
-        createSynthEvent( _synth1, Pitch.note( "D#", 2 ), 10 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  11 );
-        createSynthEvent( _synth1, Pitch.note( "A#", 1 ), 12 );
-        createSynthEvent( _synth1, Pitch.note( "A#", 2 ), 13 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  14 );
-        createSynthEvent( _synth1, Pitch.note( "C", 2 ),  15 );
-
-        // Off-beat minor seventh chord stabs for synth 2
-
-        createSynthEvent( _synth2, Pitch.note( "C", 3 ),  4 );
-        createSynthEvent( _synth2, Pitch.note( "G", 3 ),  4 );
-        createSynthEvent( _synth2, Pitch.note( "A#", 3 ), 4 );
-        createSynthEvent( _synth2, Pitch.note( "D#", 3 ), 4 );
-
-        createSynthEvent( _synth2, Pitch.note( "D", 3 ), 8 );
-        createSynthEvent( _synth2, Pitch.note( "A", 3 ), 8 );
-        createSynthEvent( _synth2, Pitch.note( "C", 3 ), 8 );
-        createSynthEvent( _synth2, Pitch.note( "F", 3 ), 8 );
+        createDrumEvent( "jazz",  0 );  // jazz at the starting bar
 
         // a C note to be synthesized live when holding down the corresponding button
 
