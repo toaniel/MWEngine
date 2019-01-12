@@ -171,7 +171,7 @@ public final class MWEngineActivity extends Activity {
     protected void setupSong() {
         _sequencerController = _engine.getSequencerController();
         _sequencerController.setTempoNow( 130.0f, 4, 4 ); // 130 BPM in 4/4 time
-        _sequencerController.updateMeasures( 1, STEPS_PER_MEASURE ); // we'll loop just a single measure with given subdivisions
+        _sequencerController.updateMeasures( 10, STEPS_PER_MEASURE ); // we'll loop just a single measure with given subdivisions
 
         // cache some of the engines properties
 
