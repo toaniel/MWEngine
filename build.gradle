@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "nl.igorski.example"
-        minSdkVersion 16
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
