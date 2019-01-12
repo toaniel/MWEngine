@@ -45,6 +45,8 @@
 
 #endif
 
+#define DELTA_Q0_15 (1.0f / pow(2,16))
+
 namespace MWEngine {
 
     /* static member initialization */
@@ -396,8 +398,8 @@ namespace MWEngine {
                 if ( sample < -1.0 )
                     sample = -1.0f;
 
-                else if ( sample > +1.0 )
-                    sample = +1.0f;
+                else if ( sample > +1.0f  - DELTA_Q0_15)
+                    sample = +1.0f - DELTA_Q0_15;
 
                 // write output interleaved (e.g. a sample per output channel
                 // before continuing writing the next sample for the next channel range)
