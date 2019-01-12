@@ -234,6 +234,7 @@ namespace MWEngine {
 
     bool AudioEngine::render( int amountOfSamples )
     {
+        // thread is here used as a global flag that indicates that the player/sequencer must be rendering audio
         if ( thread == 0 )
             return false;
 
@@ -291,14 +292,15 @@ namespace MWEngine {
             std::vector<BaseAudioEvent*> audioEvents = channel->audioEvents;
             int amount = audioEvents.size();
 
-            // divide the channels volume by the amount of channels to provide extra headroom
+            // decrease the volume depending on the amount of channel feeds to provide headroom
+            // check math
             SAMPLE_TYPE channelVolume = ( SAMPLE_TYPE ) channel->getVolumeLogarithmic() / ( SAMPLE_TYPE ) channelAmount;
 
-            // get channel output buffer and clear previous contents
+            // get feed output buffer and clear previous contents
             AudioBuffer* channelBuffer = channel->getOutputBuffer();
-            channelBuffer->silenceBuffers();
+            channelBuffer->silenceBuffers(); // wasn't it just silenced above in line 243?
 
-            bool useChannelRange  = channel->maxBufferPosition != 0; // channel has its own buffer range (i.e. drummachine)
+            bool useChannelRange  = channel->maxBufferPosition != 0; // feed has its own buffer range (i.e. drummachine)
             int maxBufferPosition = useChannelRange ? channel->maxBufferPosition : max_buffer_position;
 
             // we make a copy of the current buffer position indicator
@@ -312,7 +314,7 @@ namespace MWEngine {
             // only render sequenced events when the sequencer isn't in the paused state
             // and the channel volume is actually at an audible level! ( > 0 )
 
-            if ( Sequencer::playing && amount > 0 && channelVolume > 0.0 )
+            if ( Sequencer::playing && amount > 0 && channelVolume > 0.0 )  // replace sequencer with wav player
             {
                 if ( !isCached )
                 {
@@ -333,16 +335,20 @@ namespace MWEngine {
                     channel->readCachedBuffer( channelBuffer, bufferPos );
                 }
             }
+            else
+            {
+                assert(0); // I believe it should never get here}
+            }
 
             // perform live rendering for this channels instrument
-            if ( channel->hasLiveEvents )
+            if ( channel->hasLiveEvents ) // what does live events mean?
             {
                 int lAmount = channel->liveEvents.size();
 
                 for ( int k = 0; k < lAmount; ++k )
                 {
                     BaseAudioEvent* vo = channel->liveEvents[ k ];
-                    vo->mixBuffer( channelBuffer );
+                    vo->mixBuffer( channelBuffer ); // it seems like it mixes all the events of the SAME feed?
                 }
             }
 
@@ -376,11 +382,11 @@ namespace MWEngine {
             if ( channel->hasLiveEvents && channelVolume == 0.0 )
                 channelVolume = 1.0;
 
-            channel->mixBuffer( inBuffer, channelVolume );
+            channel->mixBuffer( inBuffer, channelVolume ); // inBuffer is actually the output buffer
         }
 
         // apply master bus processors (e.g. high pass filter, limiter, etc.)
-        std::vector<BaseProcessor*> processors = masterBus->getActiveProcessors();
+        std::vector<BaseProcessor*> processors = masterBus->getActiveProcessors(); // connect the Psyx library here
 
         for ( int k = 0; k < processors.size(); k++ )
             processors[ k ]->process( inBuffer, isMono );
@@ -417,10 +423,10 @@ namespace MWEngine {
                     // only when the integer modulo operation check has passed
                     // TODO : this attempted fmod calculation is inaccurate.
                     //if ( std::fmod(( float ) bufferPosition, samples_per_step ) == 0 )
-                        handleSequencerPositionUpdate( i );
+                    handleSequencerPositionUpdate( i );
                 }
                 if ( marked_buffer_position > 0 && bufferPosition == marked_buffer_position )
-                     Notifier::broadcast( Notifications::MARKER_POSITION_REACHED );
+                    Notifier::broadcast( Notifications::MARKER_POSITION_REACHED );
 
                 bufferPosition++;
 
@@ -440,7 +446,7 @@ namespace MWEngine {
         // output to the hardware makes it both unnecessarily audible and stalls execution)
 
         if ( !bouncing )
-            DriverAdapter::writeOutput( outBuffer, amountOfSamples * outputChannels );
+            DriverAdapter::writeOutput( outBuffer, amountOfSamples * outputChannels );      // connect algorithm here
 
 #ifdef RECORD_TO_DISK
         // write the output to disk if a recording state is active
@@ -451,7 +457,7 @@ namespace MWEngine {
                 DiskWriter::appendBuffer( inputChannel->getOutputBuffer() );
             else                    // recording global output ? > write the combined buffer
 #endif
-                DiskWriter::appendBuffer( outBuffer, amountOfSamples, outputChannels );
+            DiskWriter::appendBuffer( outBuffer, amountOfSamples, outputChannels );
 
             // are we bouncing the current sequencer range and have we played through the full range?
 
@@ -608,11 +614,11 @@ namespace MWEngine {
  * NOTE: the only Java class that can be registered is the one that has created
  * the thread in which the engine is started.
  */
-extern "C"
-void init( JNIEnv* env, jobject jobj )
-{
-    JavaBridge::registerInterface( env, jobj );
-}
+    extern "C"
+    void init( JNIEnv* env, jobject jobj )
+    {
+        JavaBridge::registerInterface( env, jobj );
+    }
 
 #endif
 
