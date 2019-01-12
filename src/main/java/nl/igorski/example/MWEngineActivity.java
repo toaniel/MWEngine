@@ -179,8 +179,7 @@ public final class MWEngineActivity extends Activity {
 
         // Load some samples from the packaged assets folder into the SampleManager
 
-        loadWAVAsset( "hat.wav",  "hat" );
-        loadWAVAsset( "clap.wav", "clap" );
+        loadWAVAsset( "jazz.wav", "jazz" );
 
         // create a lowpass filter to catch all low rumbling and a limiter to prevent clipping of output :)
 
@@ -224,8 +223,7 @@ public final class MWEngineActivity extends Activity {
 
         // adjust synthesizer volumes
         _synth2.getAudioChannel().setVolume( .7f );
-        createDrumEvent( "clap",  0 );  // hi-hat on the first beat of the bar
-
+        createDrumEvent( "jazz",  0 );  // jazz at the starting bar
 
         // a C note to be synthesized live when holding down the corresponding button
 
