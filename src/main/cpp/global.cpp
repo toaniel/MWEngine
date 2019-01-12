@@ -28,9 +28,9 @@ namespace MWEngine {
 // default values (overridden by audio engine initializer for platform-specific values)
 
 namespace AudioEngineProps {
-    int SAMPLE_RATE     = 44100;
-    int BUFFER_SIZE     = 1024;
-    int OUTPUT_CHANNELS = 1;
+    int SAMPLE_RATE     = 48000;
+    int BUFFER_SIZE     = 256;
+    int OUTPUT_CHANNELS = 2;
 }
 
 /* used for threading */
